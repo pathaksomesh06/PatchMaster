@@ -1,0 +1,9 @@
+"/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/UpdateChecker.swift":
+  swiftmodule: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon.swiftmodule"
+  dependencies: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon-master.d"
+  abi-baseline-json: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon.abi.json"
+  objc-header: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon-Swift.h"
+  swiftsourceinfo: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon.swiftsourceinfo"
+  swiftdoc: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon.swiftdoc"
+  diagnostics: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon-master.dia"
+  const-values: "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/arm64/PatchMasterDaemon-master.swiftconstvalues"

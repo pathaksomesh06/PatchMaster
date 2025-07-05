@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/Release/PatchMasterDaemon'
+relocations:     []
+...

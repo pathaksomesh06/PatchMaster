@@ -1,0 +1,676 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		FB7DE8742E153EAD00B20E16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB7DE85D2E153EAB00B20E16 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB7DE8642E153EAB00B20E16;
+			remoteInfo = PatchMaster;
+		};
+		FB7DE87E2E153EAD00B20E16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB7DE85D2E153EAB00B20E16 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB7DE8642E153EAB00B20E16;
+			remoteInfo = PatchMaster;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FB37F3802E15C3360052EFD6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FB37F3822E15C3360052EFD6 /* PatchMasterDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PatchMasterDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB7DE8652E153EAB00B20E16 /* PatchMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PatchMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB7DE8732E153EAD00B20E16 /* PatchMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatchMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB7DE87D2E153EAD00B20E16 /* PatchMasterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatchMasterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FB37F3992E15C5C20052EFD6 /* Exceptions for "PatchMaster" folder in "PatchMaster" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DebugCatalog.swift,
+			);
+			target = FB7DE8642E153EAB00B20E16 /* PatchMaster */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FB37F3832E15C3360052EFD6 /* PatchMasterDaemon */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PatchMasterDaemon;
+			sourceTree = "<group>";
+		};
+		FB7DE8672E153EAB00B20E16 /* PatchMaster */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FB37F3992E15C5C20052EFD6 /* Exceptions for "PatchMaster" folder in "PatchMaster" target */,
+			);
+			path = PatchMaster;
+			sourceTree = "<group>";
+		};
+		FB7DE8762E153EAD00B20E16 /* PatchMasterTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PatchMasterTests;
+			sourceTree = "<group>";
+		};
+		FB7DE8802E153EAD00B20E16 /* PatchMasterUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PatchMasterUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FB37F37F2E15C3360052EFD6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE8622E153EAB00B20E16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE8702E153EAD00B20E16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE87A2E153EAD00B20E16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FB7DE85C2E153EAB00B20E16 = {
+			isa = PBXGroup;
+			children = (
+				FB7DE8672E153EAB00B20E16 /* PatchMaster */,
+				FB7DE8762E153EAD00B20E16 /* PatchMasterTests */,
+				FB7DE8802E153EAD00B20E16 /* PatchMasterUITests */,
+				FB37F3832E15C3360052EFD6 /* PatchMasterDaemon */,
+				FB7DE8662E153EAB00B20E16 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FB7DE8662E153EAB00B20E16 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB7DE8652E153EAB00B20E16 /* PatchMaster.app */,
+				FB7DE8732E153EAD00B20E16 /* PatchMasterTests.xctest */,
+				FB7DE87D2E153EAD00B20E16 /* PatchMasterUITests.xctest */,
+				FB37F3822E15C3360052EFD6 /* PatchMasterDaemon */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FB37F3812E15C3360052EFD6 /* PatchMasterDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB37F3862E15C3360052EFD6 /* Build configuration list for PBXNativeTarget "PatchMasterDaemon" */;
+			buildPhases = (
+				FB37F37E2E15C3360052EFD6 /* Sources */,
+				FB37F37F2E15C3360052EFD6 /* Frameworks */,
+				FB37F3802E15C3360052EFD6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FB37F3832E15C3360052EFD6 /* PatchMasterDaemon */,
+			);
+			name = PatchMasterDaemon;
+			packageProductDependencies = (
+			);
+			productName = PatchMasterDaemon;
+			productReference = FB37F3822E15C3360052EFD6 /* PatchMasterDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
+		FB7DE8642E153EAB00B20E16 /* PatchMaster */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB7DE8872E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMaster" */;
+			buildPhases = (
+				FB7DE8612E153EAB00B20E16 /* Sources */,
+				FB7DE8622E153EAB00B20E16 /* Frameworks */,
+				FB7DE8632E153EAB00B20E16 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FB7DE8672E153EAB00B20E16 /* PatchMaster */,
+			);
+			name = PatchMaster;
+			packageProductDependencies = (
+			);
+			productName = PatchMaster;
+			productReference = FB7DE8652E153EAB00B20E16 /* PatchMaster.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FB7DE8722E153EAD00B20E16 /* PatchMasterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB7DE88A2E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMasterTests" */;
+			buildPhases = (
+				FB7DE86F2E153EAD00B20E16 /* Sources */,
+				FB7DE8702E153EAD00B20E16 /* Frameworks */,
+				FB7DE8712E153EAD00B20E16 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB7DE8752E153EAD00B20E16 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FB7DE8762E153EAD00B20E16 /* PatchMasterTests */,
+			);
+			name = PatchMasterTests;
+			packageProductDependencies = (
+			);
+			productName = PatchMasterTests;
+			productReference = FB7DE8732E153EAD00B20E16 /* PatchMasterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FB7DE87C2E153EAD00B20E16 /* PatchMasterUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB7DE88D2E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMasterUITests" */;
+			buildPhases = (
+				FB7DE8792E153EAD00B20E16 /* Sources */,
+				FB7DE87A2E153EAD00B20E16 /* Frameworks */,
+				FB7DE87B2E153EAD00B20E16 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB7DE87F2E153EAD00B20E16 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FB7DE8802E153EAD00B20E16 /* PatchMasterUITests */,
+			);
+			name = PatchMasterUITests;
+			packageProductDependencies = (
+			);
+			productName = PatchMasterUITests;
+			productReference = FB7DE87D2E153EAD00B20E16 /* PatchMasterUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FB7DE85D2E153EAB00B20E16 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					FB37F3812E15C3360052EFD6 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					FB7DE8642E153EAB00B20E16 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					FB7DE8722E153EAD00B20E16 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = FB7DE8642E153EAB00B20E16;
+					};
+					FB7DE87C2E153EAD00B20E16 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = FB7DE8642E153EAB00B20E16;
+					};
+				};
+			};
+			buildConfigurationList = FB7DE8602E153EAB00B20E16 /* Build configuration list for PBXProject "PatchMaster" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FB7DE85C2E153EAB00B20E16;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FB7DE8662E153EAB00B20E16 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FB7DE8642E153EAB00B20E16 /* PatchMaster */,
+				FB7DE8722E153EAD00B20E16 /* PatchMasterTests */,
+				FB7DE87C2E153EAD00B20E16 /* PatchMasterUITests */,
+				FB37F3812E15C3360052EFD6 /* PatchMasterDaemon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FB7DE8632E153EAB00B20E16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE8712E153EAD00B20E16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE87B2E153EAD00B20E16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FB37F37E2E15C3360052EFD6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE8612E153EAB00B20E16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE86F2E153EAD00B20E16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB7DE8792E153EAD00B20E16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FB7DE8752E153EAD00B20E16 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB7DE8642E153EAB00B20E16 /* PatchMaster */;
+			targetProxy = FB7DE8742E153EAD00B20E16 /* PBXContainerItemProxy */;
+		};
+		FB7DE87F2E153EAD00B20E16 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB7DE8642E153EAB00B20E16 /* PatchMaster */;
+			targetProxy = FB7DE87E2E153EAD00B20E16 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FB37F3872E15C3360052EFD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = LJ3W53UDG4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.patchmaster.daemon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FB37F3882E15C3360052EFD6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = LJ3W53UDG4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.patchmaster.daemon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FB7DE8852E153EAD00B20E16 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FB7DE8862E153EAD00B20E16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FB7DE8882E153EAD00B20E16 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PatchMaster/PatchMaster.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = LJ3W53UDG4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PatchMaster;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMaster;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FB7DE8892E153EAD00B20E16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PatchMaster/PatchMaster.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = LJ3W53UDG4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PatchMaster;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMaster;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FB7DE88B2E153EAD00B20E16 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMasterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PatchMaster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PatchMaster";
+			};
+			name = Debug;
+		};
+		FB7DE88C2E153EAD00B20E16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMasterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PatchMaster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PatchMaster";
+			};
+			name = Release;
+		};
+		FB7DE88E2E153EAD00B20E16 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMasterUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = PatchMaster;
+			};
+			name = Debug;
+		};
+		FB7DE88F2E153EAD00B20E16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mavericklabs.PatchMasterUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = PatchMaster;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FB37F3862E15C3360052EFD6 /* Build configuration list for PBXNativeTarget "PatchMasterDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB37F3872E15C3360052EFD6 /* Debug */,
+				FB37F3882E15C3360052EFD6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB7DE8602E153EAB00B20E16 /* Build configuration list for PBXProject "PatchMaster" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB7DE8852E153EAD00B20E16 /* Debug */,
+				FB7DE8862E153EAD00B20E16 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB7DE8872E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMaster" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB7DE8882E153EAD00B20E16 /* Debug */,
+				FB7DE8892E153EAD00B20E16 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB7DE88A2E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMasterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB7DE88B2E153EAD00B20E16 /* Debug */,
+				FB7DE88C2E153EAD00B20E16 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB7DE88D2E153EAD00B20E16 /* Build configuration list for PBXNativeTarget "PatchMasterUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB7DE88E2E153EAD00B20E16 /* Debug */,
+				FB7DE88F2E153EAD00B20E16 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FB7DE85D2E153EAB00B20E16 /* Project object */;
+}

@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/someshpathak/Library/Developer/Xcode/DerivedData/PatchMaster-ajwuqhnlsvhnqkdjelmuyyhrgcgi/Build/Intermediates.noindex/ArchiveIntermediates/PatchMaster/InstallationBuildProductsLocation/Applications/PatchMaster.app/Contents/MacOS/PatchMaster'
+relocations:     []
+...

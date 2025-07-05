@@ -1,0 +1,60 @@
+{
+  "" : {
+    "const-values" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master.swiftconstvalues",
+    "dependencies" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master.d",
+    "diagnostics" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master.dia",
+    "emit-module-dependencies" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master-emit-module.dia",
+    "swift-dependencies" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/PatchMasterDaemon-master.swiftdeps"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppInstaller.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppInstaller.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppInstaller.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppInstaller.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppModels.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppModels.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppModels.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppModels.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppScanner.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppScanner.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppScanner.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/AppScanner.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/DownloadManager.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/DownloadManager.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/DownloadManager.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/DownloadManager.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/HomebrewChecker.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/HomebrewChecker.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/HomebrewChecker.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/HomebrewChecker.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/IntuneBrewChecker.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/IntuneBrewChecker.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/IntuneBrewChecker.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/IntuneBrewChecker.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/NativeUpdateChecker.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/NativeUpdateChecker.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/NativeUpdateChecker.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/NativeUpdateChecker.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/UpdateChecker.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/UpdateChecker.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/UpdateChecker.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/UpdateChecker.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/VersionCompare.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/VersionCompare.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/VersionCompare.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/VersionCompare.o"
+  },
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/main.swift" : {
+    "index-unit-output-path" : "/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/main.o",
+    "llvm-bc" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/main.bc",
+    "object" : "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/build/PatchMaster.build/Release/PatchMasterDaemon.build/Objects-normal/x86_64/main.o"
+  }
+}

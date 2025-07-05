@@ -1,0 +1,15 @@
+version: "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)"
+options: "6d5f10db7fb395d49f1d9b9aa2fde909cbcd5d742013db0d11cc7f91f5ed9973"
+build_start_time: [1751662503, 329953000]
+build_end_time: [1751662506, 310073000]
+inputs:
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppInstaller.swift": [1751662200, 553221201]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppModels.swift": [1751548386, 874692978]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/AppScanner.swift": [1751662200, 534411211]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/DownloadManager.swift": [1751530478, 932913735]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/HomebrewChecker.swift": [1751651788, 514293593]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/IntuneBrewChecker.swift": [1751619887, 115563460]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/NativeUpdateChecker.swift": [1751618655, 382837058]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/UpdateChecker.swift": [1751656103, 386037070]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/VersionCompare.swift": [1751641389, 56855014]
+  "/Users/someshpathak/Projects/WIP_Projects/PatchMaster/PatchMasterDaemon/main.swift": [1751639138, 754374379]
