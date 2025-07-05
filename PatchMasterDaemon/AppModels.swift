@@ -54,8 +54,6 @@ struct InstalledApp: Codable {
         try container.encode(version, forKey: .version)
         try container.encode(path, forKey: .path)
         
-        // Don't serialize icon data - too large for IPC
-        // Icons will be loaded separately in the main app
     }
 }
 
@@ -209,8 +207,7 @@ struct AppUpdate: Codable {
         try container.encode(source, forKey: .source)
         try container.encode(installedBundleId, forKey: .installedBundleId)
         
-        // Don't serialize icon data - too large for IPC
-        // Icons will be loaded separately in the main app
+        
     }
     
     // Computed properties to unify access
@@ -288,7 +285,7 @@ struct AppUpdate: Codable {
     }
 }
 
-// Simplified structure that matches the main app's MockAppUpdate
+
 struct SimpleAppUpdate: Codable {
     let appName: String
     let currentVersion: String
