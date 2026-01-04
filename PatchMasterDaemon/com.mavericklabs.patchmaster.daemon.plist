@@ -1,5 +1,3 @@
-# Create plist
-sudo tee /Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -26,8 +24,3 @@ sudo tee /Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist << 'EO
     <string>/var/log/patchmaster.log</string>
 </dict>
 </plist>
-EOF
-
-# Fix permissions
-sudo chmod 644 /Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist
-sudo chown root:wheel /Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist

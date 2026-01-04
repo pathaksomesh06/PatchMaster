@@ -39,10 +39,16 @@ class UpdateChecker {
             "org.virtualbox.app.VirtualBox",
             
             // Docker Desktop (complex updates, use Docker's built-in updater)
-            "com.docker.docker"                                        // Docker Desktop
+            "com.docker.docker",                                       // Docker Desktop
+            
+            // Cleartext (discontinued, Homebrew cask has wrong version data)
+            "com.mortenjust.Simpler"                                   // Cleartext
         ])
     
-    static func checkForUpdates(installedApps: [InstalledApp]) async throws -> [AppUpdate] {
+    static func checkForUpdates(installedApps: [InstalledApp], requestId: String? = nil) async throws -> [AppUpdate] {
+        // Report initial progress
+        writeProgress(requestId: requestId, status: "Scanning installed apps...")
+        
         var allUpdates: [AppUpdate] = []
         
         // Filter out Microsoft Office apps, Apple native apps, and excluded legacy apps
@@ -75,8 +81,10 @@ class UpdateChecker {
         print("📋 Filtered out \(installedApps.count - filteredApps.count) excluded apps (Microsoft Office, Apple native, legacy/problematic)")
         print("📋 Checking \(filteredApps.count) remaining apps for updates")
         
-        // Check Native Updates FIRST (like Parallels Desktop prlctl)
-        // This ensures apps with native update mechanisms are handled natively
+        // Report progress
+        writeProgress(requestId: requestId, status: "Checking native updaters...")
+        
+        // Check Native Updates FIRST
         print("\n=== Native Update Check ===")
         let nativeUpdates = try await NativeUpdateChecker.findUpdatesForInstalledApps(filteredApps)
         print("📋 Native updates found: \(nativeUpdates.count)")
@@ -85,12 +93,26 @@ class UpdateChecker {
         // Track which apps have native updates to avoid duplicates
         let appsWithNativeUpdates = Set(nativeUpdates.map { $0.installedBundleId })
         let appsWithoutNativeUpdates = filteredApps.filter { !appsWithNativeUpdates.contains($0.bundleId) }
-        print("📋 Apps with native updates: \(appsWithNativeUpdates.count)")
-        print("📋 Apps to check via other sources: \(appsWithoutNativeUpdates.count)")
         
-        // Check Homebrew (only for apps without native updates)
+        writeProgress(requestId: requestId, status: "Checking Sparkle feeds...")
+        
+        // Check Sparkle feeds
+        print("\n=== Sparkle Update Check ===")
+        let sparkleUpdates = await SparkleUpdateChecker.findUpdatesForInstalledApps(appsWithoutNativeUpdates)
+        print("📋 Sparkle updates found: \(sparkleUpdates.count)")
+        allUpdates.append(contentsOf: sparkleUpdates)
+        
+        // Track apps checked via Sparkle
+        let appsWithSparkleUpdates = Set(sparkleUpdates.map { $0.installedBundleId })
+        let appsNotYetChecked = appsWithoutNativeUpdates.filter { 
+            !appsWithSparkleUpdates.contains($0.bundleId)
+        }
+        
+        writeProgress(requestId: requestId, status: "Checking Homebrew catalog...")
+        
+        // Check Homebrew (only for remaining apps)
         print("\n=== Homebrew Update Check ===")
-        let homebrewUpdates = try await HomebrewChecker.findUpdatesForInstalledApps(appsWithoutNativeUpdates)
+        let homebrewUpdates = try await HomebrewChecker.findUpdatesForInstalledApps(appsNotYetChecked)
         print("📋 Homebrew updates found: \(homebrewUpdates.count)")
         allUpdates.append(contentsOf: homebrewUpdates)
         
@@ -105,7 +127,26 @@ class UpdateChecker {
             return isNewer
         }
         
+        writeProgress(requestId: requestId, status: "Finalizing results...")
+        
         return filteredUpdates
+    }
+    
+    static func writeProgress(requestId: String?, status: String) {
+        guard let requestId = requestId else { return }
+        
+        let progressDir = "/tmp/patchmaster-ipc/progress"
+        let progressFile = "\(progressDir)/\(requestId).json"
+        
+        let progressData: [String: Any] = [
+            "requestId": requestId,
+            "status": status,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+        
+        if let jsonData = try? JSONSerialization.data(withJSONObject: progressData) {
+            try? jsonData.write(to: URL(fileURLWithPath: progressFile))
+        }
     }
     
     // Debug method to analyze version detection issues

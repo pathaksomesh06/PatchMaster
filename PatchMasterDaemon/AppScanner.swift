@@ -13,54 +13,40 @@ class AppScanner {
         // Force clear all caches
         clearLaunchServicesCache()
         
-        // Extended wait for cache clear
-        Thread.sleep(forTimeInterval: 5.0)
+        // Wait for cache clear
+        Thread.sleep(forTimeInterval: 2.0)
         
-        var apps: [InstalledApp] = []
-        let fm = FileManager.default
-        let appPaths = [
+        let searchRoots = [
             "/Applications",
             "/Applications/Utilities",
             "/System/Applications",
+            "/System/Applications/Utilities",
             "~/Applications".expandingTildeInPath,
-            "/Applications/Setapp"
+            "/Applications/Setapp",
+            "/Library/Applications"
         ]
         
-        for path in appPaths {
-            if let items = try? fm.contentsOfDirectory(atPath: path) {
-                for item in items where item.hasSuffix(".app") {
-                    let appPath = "\(path)/\(item)"
-                    if let app = getAppInfo(at: appPath) {
-                        apps.append(app)
-                        print("Found: \(app.bundleId) v\(app.version) at \(appPath)")
-                    }
-                }
-            }
+        var appsByBundle: [String: InstalledApp] = [:]
+        for root in searchRoots {
+            scanApps(at: root, maxDepth: 3, accumulator: &appsByBundle)
         }
         
-        // Scan subdirectories
-        scanSubdirectories(at: "/Applications", apps: &apps)
-        
-        // Deduplicate by bundle ID
-        let uniqueApps = Dictionary(grouping: apps, by: { $0.bundleId })
-            .compactMap { $0.value.first }
-        
-        print("Found \(apps.count) total apps, \(uniqueApps.count) unique apps after deduplication")
+        let uniqueApps = Array(appsByBundle.values)
+        print("Found \(uniqueApps.count) unique apps after deduplication across \(searchRoots.count) roots")
         return uniqueApps
     }
     
     static func clearLaunchServicesCache() {
-        print("🔄 Force clearing all caches...")
+        print("🔄 Clearing Launch Services and Spotlight caches...")
         
-        // Clear bundle caches
-        Bundle.main.executablePath // Force bundle system refresh
-        
+        // Clear caches WITHOUT killing Dock/Finder (causes system instability)
+        // NOTE: We do NOT use lsregister -kill as it causes Dock to restart/flicker
         let commands = [
-                    ["/usr/bin/killall", "cfprefsd"],  // Preferences daemon
-                    ["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"],
-                    ["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-r", "-domain", "local", "-domain", "system", "-domain", "user"],
-                    ["/usr/bin/touch", "/Applications"]
-                ]
+            ["/usr/bin/killall", "cfprefsd"],
+            // Just re-register apps without killing the database
+            ["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-R", "/Applications"],
+            ["/usr/bin/touch", "/Applications"]
+        ]
         
         for command in commands {
             let process = Process()
@@ -70,35 +56,56 @@ class AppScanner {
             process.standardError = Pipe()
             try? process.run()
             process.waitUntilExit()
-            Thread.sleep(forTimeInterval: 1.0) // Wait between commands
+            Thread.sleep(forTimeInterval: 0.3)
         }
         
-        print("✅ All caches cleared")
+        // Force NSWorkspace refresh
+        NSWorkspace.shared.noteFileSystemChanged("/Applications")
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        print("✅ Caches cleared")
     }
     
-    private static func scanSubdirectories(at path: String, apps: inout [InstalledApp]) {
+    private static func scanApps(at rootPath: String, maxDepth: Int, accumulator: inout [String: InstalledApp]) {
         let fm = FileManager.default
-        if let items = try? fm.contentsOfDirectory(atPath: path) {
-            for item in items {
-                let fullPath = "\(path)/\(item)"
-                var isDir: ObjCBool = false
-                if fm.fileExists(atPath: fullPath, isDirectory: &isDir), isDir.boolValue {
-                    if item.hasSuffix(".app") {
-                        if let app = getAppInfo(at: fullPath) {
-                            apps.append(app)
-                        }
-                    } else if !item.hasPrefix(".") {
-                        if let subItems = try? fm.contentsOfDirectory(atPath: fullPath) {
-                            for subItem in subItems where subItem.hasSuffix(".app") {
-                                let appPath = "\(fullPath)/\(subItem)"
-                                if let app = getAppInfo(at: appPath) {
-                                    apps.append(app)
-                                }
-                            }
-                        }
-                    }
+        let expandedPath = rootPath.expandingTildeInPath
+        let rootURL = URL(fileURLWithPath: expandedPath)
+        
+        guard fm.fileExists(atPath: expandedPath) else {
+            print("⏭️ Skipping missing path: \(expandedPath)")
+            return
+        }
+        
+        let rootComponents = rootURL.pathComponents.count
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants]
+        
+        if let enumerator = fm.enumerator(at: rootURL, includingPropertiesForKeys: [.isDirectoryKey, .isPackageKey], options: options, errorHandler: { url, error in
+            print("⚠️ Enumerator error at \(url.path): \(error.localizedDescription)")
+            return true
+        }) {
+            for case let url as URL in enumerator {
+                let depth = url.pathComponents.count - rootComponents
+                if depth > maxDepth {
+                    enumerator.skipDescendants()
+                    continue
                 }
+                
+                guard url.pathExtension.lowercased() == "app" else { continue }
+                if let app = getAppInfo(at: url.path) {
+                    add(app, to: &accumulator)
+                }
+                enumerator.skipDescendants()
             }
+        }
+    }
+
+    private static func add(_ app: InstalledApp, to accumulator: inout [String: InstalledApp]) {
+        if let existing = accumulator[app.bundleId] {
+            if VersionCompare.isNewer(app.version, than: existing.version) {
+                accumulator[app.bundleId] = app
+            }
+        } else {
+            accumulator[app.bundleId] = app
         }
     }
     
@@ -116,14 +123,27 @@ class AppScanner {
         let shortVersion = plist["CFBundleShortVersionString"] as? String
         let bundleVersion = plist["CFBundleVersion"] as? String
         
-        // Special case: For Android Studio, always use CFBundleShortVersionString if available
+        // Select version: prefer longer/more detailed version to match update sources
         let version: String
         if bundleId == "com.google.android.studio", let short = shortVersion {
             version = short
+        } else if bundleId == "com.github.GitHubClient" {
+            version = shortVersion ?? bundleVersion ?? "0.0.0"
+        } else if bundleId == "com.microsoft.PowerShell" {
+            version = shortVersion ?? bundleVersion ?? "0.0.0"
         } else if let short = shortVersion, let bundle = bundleVersion {
-            let shortCount = short.split(separator: ".").count
-            let bundleCount = bundle.split(separator: ".").count
-            version = (bundleCount > shortCount) ? bundle : short
+            // General rule: use whichever has more components or is longer
+            let shortParts = short.split(separator: ".")
+            let bundleParts = bundle.split(separator: ".")
+            
+            if bundleParts.count > shortParts.count {
+                version = bundle
+            } else if shortParts.count > bundleParts.count {
+                version = short
+            } else {
+                // Same component count: pick the longer string (handles cases like .0002 vs .2)
+                version = bundle.count >= short.count ? bundle : short
+            }
         } else if let short = shortVersion {
             version = short
         } else if let bundle = bundleVersion {

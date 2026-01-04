@@ -121,9 +121,16 @@ Temporary Items
 *.pkg
 *.xcarchive
 default.profraw
+*.profraw
+*.profdata
 
 # Build artifacts
 build/
+DerivedData/
+
+# Package build outputs (keep package/scripts/ and package/distribution.xml)
+package/payload/
+package/component.pkg
 
 # Temporary files
 *.tmp
@@ -135,4 +142,11 @@ build/
 
 # System files
 *.log
-Thumbs.db 
+Thumbs.db
+
+# Development/test scripts (keep BUILD.md for documentation)
+cleanup_install.sh
+fix_ipc_permissions.sh
+test_daemon.sh
+sign_alternative.sh
+script.sh 

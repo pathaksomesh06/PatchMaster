@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 extension String {
     func versionWithLineBreakBeforeParenthesis() -> String {
@@ -32,111 +33,197 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Header
-            VStack(spacing: 16) {
-                HStack {
-                    Image(systemName: "arrow.clockwise.circle.fill")
-                        .font(.system(size: 28))
-                        .foregroundStyle(.blue.gradient)
-                    Text("PatchMaster")
-                        .font(.system(size: 32, weight: .semibold, design: .rounded))
-                    Spacer()
+        ZStack {
+            // Subtle gradient background
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.97, green: 0.98, blue: 1.0),
+                    Color(red: 0.95, green: 0.97, blue: 1.0)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header with gradient
+                VStack(spacing: 16) {
+                    HStack {
+                        Image(systemName: "gearshape.circle.fill")
+                            .font(.system(size: 28))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.3, green: 0.6, blue: 1.0),
+                                        Color(red: 0.1, green: 0.5, blue: 0.9)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        Text("PatchMaster")
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.1, green: 0.2, blue: 0.4),
+                                        Color(red: 0.3, green: 0.4, blue: 0.6)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        Spacer()
+                        
+                        if !viewModel.updates.isEmpty {
+                            Text("\(viewModel.updates.count) Updates")
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 1.0, green: 0.3, blue: 0.3),
+                                            Color(red: 0.9, green: 0.2, blue: 0.2)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .cornerRadius(20)
+                        }
+                        
+                        Button(action: {
+                            Task {
+                                await viewModel.forceRefresh()
+                            }
+                        }) {
+                            Label("Refresh", systemImage: "arrow.clockwise")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.2, green: 0.7, blue: 0.4),
+                                            Color(red: 0.1, green: 0.6, blue: 0.3)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .cornerRadius(8)
+                        }
+                        .disabled(viewModel.isChecking)
+                    }
                     
                     if !viewModel.updates.isEmpty {
-                        Text("\(viewModel.updates.count) Updates Available")
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.secondary)
+                            TextField("Search apps...", text: $searchText)
+                                .textFieldStyle(.plain)
+                        }
+                        .padding(10)
+                        .background(Color.white.opacity(0.6))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                        )
+                    }
+                }
+                .padding(20)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.white.opacity(0.7),
+                            Color.white.opacity(0.5)
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+                
+                // Content
+                if viewModel.isChecking {
+                    Spacer()
+                    VStack(spacing: 24) {
+                        LoadingAnimationView()
+                        
+                        VStack(spacing: 8) {
+                            Text(viewModel.checkingStatus)
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundColor(.primary)
+                                .id(viewModel.checkingStatus)
+                                .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                                .animation(.easeInOut(duration: 0.3), value: viewModel.checkingStatus)
+                            
+                            AnimatedDotsView()
+                                .padding(.top, 4)
+                        }
+                    }
+                    Spacer()
+                } else if viewModel.updates.isEmpty {
+                    Spacer()
+                    VStack(spacing: 16) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 64))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.2, green: 0.7, blue: 0.4),
+                                        Color(red: 0.1, green: 0.6, blue: 0.3)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        Text("All apps are up to date")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(red: 0.1, green: 0.2, blue: 0.4))
+                        Text("Your system is running the latest versions")
                             .font(.callout)
                             .foregroundColor(.secondary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(20)
                     }
-                    
-                    Button(action: {
-                        Task {
-                            await viewModel.forceRefresh()
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredUpdates, id: \.uniqueID) { update in
+                                UpdateRowPro(
+                                    update: update,
+                                    onComplete: {
+                                        Task {
+                                            await viewModel.refreshAfterInstall()
+                                        }
+                                    }
+                                )
+                                Divider()
+                                    .padding(.horizontal, 20)
+                                    .opacity(0.3)
+                            }
                         }
-                    }) {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                            .font(.system(size: 14, weight: .medium))
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(viewModel.isChecking)
                 }
                 
                 if !viewModel.updates.isEmpty {
+                    Divider()
+                        .opacity(0.3)
                     HStack {
-                        Image(systemName: "magnifyingglass")
+                        Spacer()
+                        Text("Last checked: \(viewModel.lastChecked, formatter: timeFormatter)")
+                            .font(.caption)
                             .foregroundColor(.secondary)
-                        TextField("Search apps...", text: $searchText)
-                            .textFieldStyle(.plain)
                     }
-                    .padding(8)
-                    .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(8)
+                    .padding(20)
+                    .background(Color.white.opacity(0.3))
                 }
-            }
-            .padding(20)
-            .background(Color(NSColor.windowBackgroundColor))
-            
-            Divider()
-            
-            // Content
-            if viewModel.isChecking {
-                Spacer()
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .scaleEffect(1.5)
-                    Text("Checking for updates...")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-            } else if viewModel.updates.isEmpty {
-                Spacer()
-                VStack(spacing: 16) {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: 64))
-                        .foregroundStyle(.green.gradient)
-                    Text("All apps are up to date")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                    Text("Your system is running the latest versions")
-                        .font(.callout)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(filteredUpdates, id: \.uniqueID) { update in
-                            UpdateRowPro(
-                                update: update,
-                                onComplete: {
-                                    Task {
-                                        await viewModel.refreshAfterInstall()
-                                    }
-                                }
-                            )
-                            Divider()
-                                .padding(.horizontal, 20)
-                        }
-                    }
-                }
-            }
-            
-            if !viewModel.updates.isEmpty {
-                Divider()
-                HStack {
-                    Spacer()
-                    Text("Last checked: \(viewModel.lastChecked, formatter: timeFormatter)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding(20)
-                .background(Color(NSColor.windowBackgroundColor))
             }
         }
         .frame(minWidth: 800, minHeight: 600)
@@ -153,13 +240,6 @@ struct ContentView: View {
         return formatter
     }
     
-    private func updateAllApps() async {
-        for update in viewModel.updates {
-            // Trigger update for each app
-            // Implementation would go here
-        }
-        await viewModel.refreshAfterInstall()
-    }
 }
 
 struct UpdateRowPro: View {
@@ -370,44 +450,6 @@ struct UpdateRowPro: View {
         }
     }
     
-    private func getUserFriendlyErrorMessage(error: Error, appName: String) -> (message: String, canRetry: Bool) {
-        let errorDescription = error.localizedDescription.lowercased()
-        
-        if errorDescription.contains("timeout") || errorDescription.contains("request timeout") {
-            if appName.lowercased().contains("microsoft") || appName.lowercased().contains("office") {
-                return ("Microsoft \(appName) is a large download that may take 10+ minutes. Please check your internet connection and try again.", true)
-            } else {
-                return ("\(appName) download timed out. This may be a large file - please check your internet connection and try again.", true)
-            }
-        }
-        
-        if errorDescription.contains("network") || errorDescription.contains("connection") || errorDescription.contains("internet") {
-            return ("Network connection issue. Please check your internet connection and try again.", true)
-        }
-        
-        if errorDescription.contains("authorization") || errorDescription.contains("permission") || errorDescription.contains("admin") {
-            return ("Administrator permission required. Please ensure you have admin rights and try again.", true)
-        }
-        
-        if appName.lowercased().contains("microsoft") && errorDescription.contains("not found") {
-            return ("Microsoft \(appName) may not be available in the current catalog. Try updating from Microsoft directly or check Microsoft AutoUpdate.", false)
-        }
-        
-        if errorDescription.contains("install") || errorDescription.contains("copy") {
-            return ("Installation failed. Please ensure \(appName) is not currently running and try again.", true)
-        }
-        
-        if errorDescription.contains("space") || errorDescription.contains("disk") {
-            return ("Insufficient disk space. Please free up some space and try again.", true)
-        }
-        
-        if retryCount < 2 {
-            return ("Update failed: \(error.localizedDescription). Click retry to try again.", true)
-        } else {
-            return ("Update failed after multiple attempts: \(error.localizedDescription). Please try updating \(appName) manually.", false)
-        }
-    }
-    
     private func retryUpdate() {
         retryCount += 1
         performUpdate()
@@ -434,6 +476,113 @@ struct UpdateRowPro: View {
         } else {
             isDownloading = false
             downloadProgress = 0
+        }
+    }
+}
+
+// Animated loading indicator with pulsing circles
+struct LoadingAnimationView: View {
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 0.05)) { context in
+            let time = context.date.timeIntervalSince1970
+            let outerPhase = sin(time * 2.0) // 2 second cycle
+            let middlePhase = sin(time * 2.5 + 0.5) // Slightly faster, offset
+            
+            ZStack {
+                // Outer pulsing circle with gradient
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.3, green: 0.6, blue: 1.0).opacity(0.3),
+                                Color(red: 0.1, green: 0.5, blue: 0.9).opacity(0.3)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 4
+                    )
+                    .frame(width: 80, height: 80)
+                    .scaleEffect(1.0 + CGFloat(outerPhase) * 0.2)
+                    .opacity(0.4 + Double(outerPhase) * 0.3)
+                
+                // Middle pulsing circle with gradient
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.3, green: 0.6, blue: 1.0).opacity(0.5),
+                                Color(red: 0.1, green: 0.5, blue: 0.9).opacity(0.5)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 3
+                    )
+                    .frame(width: 60, height: 60)
+                    .scaleEffect(1.0 + CGFloat(middlePhase) * 0.1)
+                    .opacity(0.6 + Double(middlePhase) * 0.2)
+                
+                // Inner spinning progress view with gradient
+                ZStack {
+                    Circle()
+                        .trim(from: 0, to: 0.7)
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.3, green: 0.6, blue: 1.0),
+                                    Color(red: 0.1, green: 0.5, blue: 0.9)
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            style: StrokeStyle(lineWidth: 3, lineCap: .round)
+                        )
+                        .frame(width: 40, height: 40)
+                        .rotationEffect(.degrees(time * 100))
+                }
+            }
+        }
+    }
+}
+
+// Animated dots view
+struct AnimatedDotsView: View {
+    @State private var dotScales: [CGFloat] = [0.5, 0.5, 0.5]
+    @State private var dotOpacities: [Double] = [0.5, 0.5, 0.5]
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<3) { index in
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.3, green: 0.6, blue: 1.0),
+                                Color(red: 0.1, green: 0.5, blue: 0.9)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 6, height: 6)
+                    .scaleEffect(dotScales[index])
+                    .opacity(dotOpacities[index])
+            }
+        }
+        .onAppear {
+            // Animate each dot with a delay
+            for index in 0..<3 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
+                    withAnimation(
+                        Animation.easeInOut(duration: 0.6)
+                            .repeatForever(autoreverses: true)
+                    ) {
+                        dotScales[index] = 1.0
+                        dotOpacities[index] = 1.0
+                    }
+                }
+            }
         }
     }
 }

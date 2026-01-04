@@ -1,0 +1,5 @@
+#!/bin/bash
+/bin/launchctl bootout system /Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist 2>/dev/null
+/usr/bin/killall "PatchMaster" 2>/dev/null
+/usr/bin/killall "PatchMasterDaemon" 2>/dev/null
+exit 0

@@ -21,10 +21,20 @@ public class DaemonCommunicator {
         let responsesDir = "\(ipcDirectory)/responses"
         let progressDir = "\(ipcDirectory)/progress"
         
-        try? FileManager.default.createDirectory(atPath: ipcDirectory, withIntermediateDirectories: true)
-        try? FileManager.default.createDirectory(atPath: requestsDir, withIntermediateDirectories: true)
-        try? FileManager.default.createDirectory(atPath: responsesDir, withIntermediateDirectories: true)
-        try? FileManager.default.createDirectory(atPath: progressDir, withIntermediateDirectories: true)
+        let fm = FileManager.default
+        
+        // Only create if not exists - don't try to modify existing directories
+        if !fm.fileExists(atPath: ipcDirectory) {
+            do {
+                let attributes: [FileAttributeKey: Any] = [.posixPermissions: 0o777]
+                try fm.createDirectory(atPath: ipcDirectory, withIntermediateDirectories: true, attributes: attributes)
+                try fm.createDirectory(atPath: requestsDir, withIntermediateDirectories: true, attributes: attributes)
+                try fm.createDirectory(atPath: responsesDir, withIntermediateDirectories: true, attributes: attributes)
+                try fm.createDirectory(atPath: progressDir, withIntermediateDirectories: true, attributes: attributes)
+            } catch {
+                // Ignore - daemon likely already created them
+            }
+        }
     }
     
     private func sendRequest(_ request: DaemonRequest) async throws -> DaemonResponse {
@@ -47,10 +57,13 @@ public class DaemonCommunicator {
         
         let maxWaitTime = getTimeoutForRequest(request.type)
         let startTime = Date()
-        let checkInterval: TimeInterval = 0.5
+        let checkInterval: TimeInterval = 0.1  // Check more frequently
         
         while Date().timeIntervalSince(startTime) < maxWaitTime {
             if FileManager.default.fileExists(atPath: responsePath) {
+                // Add small delay to ensure file is fully written
+                try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                
                 do {
                     let responseData = try Data(contentsOf: URL(fileURLWithPath: responsePath))
                     let response = try JSONDecoder().decode(DaemonResponse.self, from: responseData)
@@ -61,6 +74,8 @@ public class DaemonCommunicator {
                     return response
                 } catch {
                     print("❌ Failed to parse response: \(error)")
+                    try? FileManager.default.removeItem(atPath: responsePath)
+                    throw error
                 }
             }
             
@@ -77,17 +92,23 @@ public class DaemonCommunicator {
         switch type {
         case .downloadApp: return 900.0      // 15 minutes
         case .installApp: return 600.0       // 10 minutes
-        case .checkUpdates: return 120.0     // 2 minutes
+        case .checkUpdates: return 600.0     // 10 minutes
         case .scanApps: return 60.0          // 1 minute
         case .cancelDownload: return 10.0    // 10 seconds
         case .installNativeApp: return 300.0 // 5 minutes
         }
     }
     
-    func checkForUpdates() async throws -> [MockAppUpdate] {
+    func checkForUpdates(progressCallback: ((String) -> Void)? = nil) async throws -> [MockAppUpdate] {
         print("🔍 Starting update check...")
         let request = DaemonRequest(type: .checkUpdates, data: nil)
+        
+        let progressTask = Task {
+            await monitorCheckProgress(requestId: request.id, progressCallback: progressCallback)
+        }
+        
         let response = try await sendRequest(request)
+        progressTask.cancel()
         
         if response.success, let data = response.data {
             let updates = try JSONDecoder().decode([MockAppUpdate].self, from: data)
@@ -100,6 +121,36 @@ public class DaemonCommunicator {
                 NSLocalizedDescriptionKey: error
             ])
         }
+    }
+    
+    private func monitorCheckProgress(requestId: String, progressCallback: ((String) -> Void)?) async {
+        let progressDir = "\(ipcDirectory)/progress"
+        let progressFile = "\(progressDir)/\(requestId).json"
+        var lastStatus: String? = nil
+        
+        while !Task.isCancelled {
+            if FileManager.default.fileExists(atPath: progressFile) {
+                do {
+                    let progressData = try Data(contentsOf: URL(fileURLWithPath: progressFile))
+                    if let progressInfo = try JSONSerialization.jsonObject(with: progressData) as? [String: Any],
+                       let status = progressInfo["status"] as? String {
+                        // Only update if status changed to avoid unnecessary UI updates
+                        if status != lastStatus {
+                            lastStatus = status
+                            await MainActor.run {
+                                progressCallback?(status)
+                            }
+                        }
+                    }
+                } catch {
+                    // Ignore parsing errors
+                }
+            }
+            
+            try? await Task.sleep(nanoseconds: 200_000_000) // Check every 200ms for smoother updates
+        }
+        
+        try? FileManager.default.removeItem(atPath: progressFile)
     }
     
     func installApp(from fileURL: URL, appName: String) async throws {
@@ -310,13 +361,6 @@ struct DaemonResponse: Codable {
     let success: Bool
     let data: Data?
     let error: String?
-}
-
-struct MockInstalledApp {
-    let bundleId: String
-    let version: String
-    let path: String
-    let icon: NSImage?
 }
 
 public struct MockAppUpdate: Codable {

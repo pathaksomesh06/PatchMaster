@@ -8,14 +8,15 @@
 import Foundation
 import AppKit
 
-struct IntuneBrweApp: Codable {
+// Generic app structure for updates
+struct AppInfo: Codable {
     let name: String
     let description: String
     let version: String
-    let url: String
+    let url: String?
     let bundleId: String
-    let homepage: String
-    let fileName: String
+    let homepage: String?
+    let fileName: String?
 }
 
 struct InstalledApp: Codable {
@@ -121,14 +122,14 @@ struct HomebrewApp: Codable {
 }
 
 enum UpdateSource: String, Codable {
-    case intuneBrew = "intuneBrew"
     case homebrew = "homebrew"
     case native = "native"
+    case sparkle = "sparkle"
     
     var displayName: String {
         switch self {
-        case .intuneBrew:
-            return "IntuneBrew"
+        case .sparkle:
+            return "Sparkle"
         case .homebrew:
             return "Homebrew"
         case .native:
@@ -138,8 +139,8 @@ enum UpdateSource: String, Codable {
     
     var color: String {
         switch self {
-        case .intuneBrew:
-            return "blue"
+        case .sparkle:
+            return "purple"
         case .homebrew:
             return "orange"
         case .native:
@@ -149,8 +150,8 @@ enum UpdateSource: String, Codable {
     
     var systemImageName: String {
         switch self {
-        case .intuneBrew:
-            return "cube.box"
+        case .sparkle:
+            return "sparkles"
         case .homebrew:
             return "terminal"
         case .native:
@@ -160,7 +161,7 @@ enum UpdateSource: String, Codable {
 }
 
 struct AppUpdate: Codable {
-    let app: IntuneBrweApp?
+    let appInfo: AppInfo?
     let homebrewCask: HomebrewCask?
     let currentVersion: String
     let newVersion: String
@@ -169,11 +170,11 @@ struct AppUpdate: Codable {
     let installedBundleId: String
     
     enum CodingKeys: String, CodingKey {
-        case app, homebrewCask, currentVersion, newVersion, iconData, source, installedBundleId
+        case appInfo, homebrewCask, currentVersion, newVersion, iconData, source, installedBundleId
     }
     
-    init(app: IntuneBrweApp?, homebrewCask: HomebrewCask?, currentVersion: String, newVersion: String, installedAppIcon: NSImage?, source: UpdateSource, installedBundleId: String) {
-        self.app = app
+    init(appInfo: AppInfo?, homebrewCask: HomebrewCask?, currentVersion: String, newVersion: String, installedAppIcon: NSImage?, source: UpdateSource, installedBundleId: String) {
+        self.appInfo = appInfo
         self.homebrewCask = homebrewCask
         self.currentVersion = currentVersion
         self.newVersion = newVersion
@@ -184,7 +185,7 @@ struct AppUpdate: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        app = try container.decodeIfPresent(IntuneBrweApp.self, forKey: .app)
+        appInfo = try container.decodeIfPresent(AppInfo.self, forKey: .appInfo)
         homebrewCask = try container.decodeIfPresent(HomebrewCask.self, forKey: .homebrewCask)
         currentVersion = try container.decode(String.self, forKey: .currentVersion)
         newVersion = try container.decode(String.self, forKey: .newVersion)
@@ -200,35 +201,33 @@ struct AppUpdate: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(app, forKey: .app)
+        try container.encodeIfPresent(appInfo, forKey: .appInfo)
         try container.encodeIfPresent(homebrewCask, forKey: .homebrewCask)
         try container.encode(currentVersion, forKey: .currentVersion)
         try container.encode(newVersion, forKey: .newVersion)
         try container.encode(source, forKey: .source)
         try container.encode(installedBundleId, forKey: .installedBundleId)
-        
-        
     }
     
     // Computed properties to unify access
     var appName: String {
-        return app?.name ?? homebrewCask?.displayName ?? "Unknown"
+        return appInfo?.name ?? homebrewCask?.displayName ?? "Unknown"
     }
     
     var appDescription: String {
-        return app?.description ?? homebrewCask?.description ?? ""
+        return appInfo?.description ?? homebrewCask?.description ?? ""
     }
     
     var homepage: String {
-        return app?.homepage ?? homebrewCask?.homepage ?? ""
+        return appInfo?.homepage ?? homebrewCask?.homepage ?? ""
     }
     
     var downloadURL: String? {
-        return app?.url ?? homebrewCask?.url
+        return appInfo?.url ?? homebrewCask?.url
     }
     
     var fileName: String? {
-        return app?.fileName
+        return appInfo?.fileName
     }
     
     // Computed ID for ForEach
@@ -237,24 +236,14 @@ struct AppUpdate: Codable {
     }
     
     // Convenience initializers
-    static func fromIntuneBrew(app: IntuneBrweApp, currentVersion: String, newVersion: String, installedAppIcon: NSImage?, installedBundleId: String) -> AppUpdate {
-        return AppUpdate(
-            app: app,
-            homebrewCask: nil,
-            currentVersion: currentVersion,
-            newVersion: newVersion,
-            installedAppIcon: installedAppIcon,
-            source: .intuneBrew,
-            installedBundleId: installedBundleId
-        )
-    }
+
     
     static func fromHomebrew(cask: HomebrewCask, currentVersion: String, newVersion: String, installedAppIcon: NSImage?, installedBundleId: String) -> AppUpdate {
         return AppUpdate(
-            app: nil,
+            appInfo: nil,
             homebrewCask: cask,
-            currentVersion: currentVersion,
-            newVersion: newVersion,
+            currentVersion: VersionCompare.cleanVersionForDisplay(currentVersion),
+            newVersion: VersionCompare.cleanVersionForDisplay(newVersion),
             installedAppIcon: installedAppIcon,
             source: .homebrew,
             installedBundleId: installedBundleId
@@ -262,22 +251,22 @@ struct AppUpdate: Codable {
     }
     
     static func fromNative(appName: String, currentVersion: String, newVersion: String, installedAppIcon: NSImage?, installedBundleId: String, updateCommand: String) -> AppUpdate {
-        // Create a minimal IntuneBrweApp-like structure for native updates
-        let nativeApp = IntuneBrweApp(
+        let cleanNew = VersionCompare.cleanVersionForDisplay(newVersion)
+        let nativeApp = AppInfo(
             name: appName,
             description: "Native update via built-in mechanism",
-            version: newVersion,
-            url: updateCommand, // Store the update command in the URL field
+            version: cleanNew,
+            url: updateCommand,
             bundleId: installedBundleId,
-            homepage: "",
-            fileName: ""
+            homepage: nil,
+            fileName: nil
         )
         
         return AppUpdate(
-            app: nativeApp,
+            appInfo: nativeApp,
             homebrewCask: nil,
-            currentVersion: currentVersion,
-            newVersion: newVersion,
+            currentVersion: VersionCompare.cleanVersionForDisplay(currentVersion),
+            newVersion: cleanNew,
             installedAppIcon: installedAppIcon,
             source: .native,
             installedBundleId: installedBundleId

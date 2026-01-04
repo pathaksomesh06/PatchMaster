@@ -33,7 +33,8 @@ class NativeUpdateChecker {
                 print("  Installed: \(app.version)")
                 
                 do {
-                    if let availableVersion = try await checkForUpdate(app: app, config: config) {
+                    if let rawAvailableVersion = try await checkForUpdate(app: app, config: config) {
+                        let availableVersion = VersionCompare.cleanVersionForDisplay(rawAvailableVersion)
                         print("  ✅ Update available via native mechanism!")
                         print("  New version: \(availableVersion)")
                         

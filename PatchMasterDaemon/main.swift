@@ -20,6 +20,9 @@ let requestsDir = "\(ipcDirectory)/requests"
 let responsesDir = "\(ipcDirectory)/responses"
 let progressDir = "\(ipcDirectory)/progress"
 
+// Global timer reference to prevent deallocation
+var requestMonitorTimer: DispatchSourceTimer?
+
 // Create IPC directories
 func setupIPC() {
     do {
@@ -35,10 +38,18 @@ func setupIPC() {
             .posixPermissions: 0o777  // rwxrwxrwx - allow all users to read/write
         ]
         
-        try FileManager.default.setAttributes(attributes, ofItemAtPath: ipcDirectory)
-        try FileManager.default.setAttributes(attributes, ofItemAtPath: requestsDir)
-        try FileManager.default.setAttributes(attributes, ofItemAtPath: responsesDir)
-        try FileManager.default.setAttributes(attributes, ofItemAtPath: progressDir)
+        // Create with permissions in one step
+        try FileManager.default.createDirectory(atPath: ipcDirectory, withIntermediateDirectories: true, attributes: attributes)
+        try FileManager.default.createDirectory(atPath: requestsDir, withIntermediateDirectories: true, attributes: attributes)
+        try FileManager.default.createDirectory(atPath: responsesDir, withIntermediateDirectories: true, attributes: attributes)
+        try FileManager.default.createDirectory(atPath: progressDir, withIntermediateDirectories: true, attributes: attributes)
+        
+        // Force permissions with chmod command for reliability
+        let chmod = Process()
+        chmod.executableURL = URL(fileURLWithPath: "/bin/chmod")
+        chmod.arguments = ["-R", "777", ipcDirectory]
+        try chmod.run()
+        chmod.waitUntilExit()
         
         print("✅ IPC directories created with proper permissions")
         print("   \(ipcDirectory)")
@@ -89,8 +100,26 @@ func processRequest(_ request: DaemonRequest) async -> DaemonResponse {
         
     case .checkUpdates:
         do {
+            // Report initial progress
+            UpdateChecker.writeProgress(requestId: request.id, status: "Scanning installed apps...")
+            
+            // Start a heartbeat task to keep progress file updated during long operations
+            let heartbeatTask = Task {
+                while !Task.isCancelled {
+                    // Touch the progress file to keep it fresh
+                    let progressFile = "\(progressDir)/\(request.id).json"
+                    if FileManager.default.fileExists(atPath: progressFile) {
+                        // File exists, just update timestamp
+                        try? FileManager.default.setAttributes([.modificationDate: Date()], ofItemAtPath: progressFile)
+                    }
+                    try? await Task.sleep(nanoseconds: 10_000_000_000) // Every 10 seconds
+                }
+            }
+            
             let installedApps = AppScanner.scanInstalledApps()
-            let updates = try await UpdateChecker.checkForUpdates(installedApps: installedApps)
+            heartbeatTask.cancel()
+            
+            let updates = try await UpdateChecker.checkForUpdates(installedApps: installedApps, requestId: request.id)
             // Convert to simplified format for main app compatibility
             let simpleUpdates = updates.map { SimpleAppUpdate(from: $0) }
             let data = try JSONEncoder().encode(simpleUpdates)
@@ -157,6 +186,8 @@ func processRequest(_ request: DaemonRequest) async -> DaemonResponse {
             return DaemonResponse(success: false, data: nil, error: "Missing downloadURL or appName")
         }
         
+        print("🚀 Downloading \(appName) from: \(downloadURL)")
+        
         do {
             // Use the enhanced download manager for better progress tracking
             let downloadResult = try await DownloadManager.shared.downloadWithProgress(
@@ -165,9 +196,12 @@ func processRequest(_ request: DaemonRequest) async -> DaemonResponse {
                 requestId: request.id
             )
             
+            print("✅ Downloaded to: \(downloadResult.tempFileURL) as .\(downloadResult.fileExtension)")
+            
             let responseData = try JSONEncoder().encode(["tempFileURL": downloadResult.tempFileURL])
             return DaemonResponse(success: true, data: responseData, error: nil)
         } catch {
+            print("❌ Download failed: \(error.localizedDescription)")
             return DaemonResponse(success: false, data: nil, error: error.localizedDescription)
         }
         
@@ -209,53 +243,112 @@ func processRequest(_ request: DaemonRequest) async -> DaemonResponse {
     }
 }
 
-// Monitor for requests
-func startRequestMonitor() {
+// Process a single request file - using semaphore to bridge async/sync
+func processRequestFile(_ fileName: String) {
     let fileManager = FileManager.default
+    let requestPath = "\(requestsDir)/\(fileName)"
+    let responsePath = "\(responsesDir)/\(fileName)"
     
-    Task {
-        while true {
+    print("📨 Found request file: \(fileName)")
+    
+    do {
+        let requestData = try Data(contentsOf: URL(fileURLWithPath: requestPath))
+        let request = try JSONDecoder().decode(DaemonRequest.self, from: requestData)
+        
+        print("🔄 Processing request: \(request.type) with ID: \(request.id)")
+        
+        // Remove the request file immediately to prevent reprocessing
+        try? fileManager.removeItem(atPath: requestPath)
+        
+        // Use a dedicated queue for async processing
+        DispatchQueue.global(qos: .userInitiated).async {
+            let semaphore = DispatchSemaphore(value: 0)
+            var response: DaemonResponse?
+            
+            Task {
+                response = await processRequest(request)
+                semaphore.signal()
+            }
+            
+            // Wait for async processing to complete (with timeout)
+            let result = semaphore.wait(timeout: .now() + 600) // 10 minute timeout
+            
+            if result == .timedOut {
+                print("❌ Request timed out: \(request.id)")
+                response = DaemonResponse(success: false, data: nil, error: "Request timed out")
+            }
+            
+            guard let finalResponse = response else {
+                print("❌ No response generated for: \(request.id)")
+                return
+            }
+            
             do {
-                let requestFiles = try fileManager.contentsOfDirectory(atPath: requestsDir)
+                let responseData = try JSONEncoder().encode(finalResponse)
                 
-                for fileName in requestFiles where fileName.hasSuffix(".json") {
-                    let requestPath = "\(requestsDir)/\(fileName)"
-                    let responsePath = "\(responsesDir)/\(fileName)"
-                    
-                    do {
-                        let requestData = try Data(contentsOf: URL(fileURLWithPath: requestPath))
-                        let request = try JSONDecoder().decode(DaemonRequest.self, from: requestData)
-                        
-                        let response = await processRequest(request)
-                        let responseData = try JSONEncoder().encode(response)
-                        try responseData.write(to: URL(fileURLWithPath: responsePath))
-                        
-                        // Remove processed request
-                        try fileManager.removeItem(atPath: requestPath)
-                        
-                        print("Processed request \(request.id) - Success: \(response.success)")
-                        
-                    } catch {
-                        print("Error processing request \(fileName): \(error)")
-                        // Remove malformed request
-                        try? fileManager.removeItem(atPath: requestPath)
-                    }
-                }
+                print("📝 Writing response to: \(responsePath)")
+                try responseData.write(to: URL(fileURLWithPath: responsePath))
                 
-                // Check every second
-                try await Task.sleep(nanoseconds: 1_000_000_000)
+                // Set world-readable permissions
+                let chmod = Process()
+                chmod.executableURL = URL(fileURLWithPath: "/bin/chmod")
+                chmod.arguments = ["666", responsePath]
+                try chmod.run()
+                chmod.waitUntilExit()
                 
+                print("✅ Processed request \(request.id) - Success: \(finalResponse.success)")
             } catch {
-                print("Error monitoring requests: \(error)")
-                try await Task.sleep(nanoseconds: 5_000_000_000) // Wait 5 seconds on error
+                print("❌ Error writing response: \(error)")
             }
         }
+        
+    } catch {
+        print("❌ Error parsing request \(fileName): \(error)")
+        // Remove malformed request
+        try? fileManager.removeItem(atPath: requestPath)
     }
 }
 
+// Monitor for requests using Timer (more reliable than async Task for daemons)
+func startRequestMonitor() {
+    let fileManager = FileManager.default
+    
+    print("📡 Starting request monitor on \(requestsDir)")
+    
+    // Use a DispatchSourceTimer for reliable polling
+    let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .userInitiated))
+    timer.schedule(deadline: .now(), repeating: .seconds(1))
+    timer.setEventHandler {
+        do {
+            let requestFiles = try fileManager.contentsOfDirectory(atPath: requestsDir)
+            let jsonFiles = requestFiles.filter { $0.hasSuffix(".json") }
+            
+            if !jsonFiles.isEmpty {
+                print("📬 Found \(jsonFiles.count) request(s)")
+            }
+            
+            for fileName in jsonFiles {
+                processRequestFile(fileName)
+            }
+        } catch {
+            print("❌ Error listing requests: \(error)")
+        }
+    }
+    timer.resume()
+    
+    // Store in global to prevent deallocation
+    requestMonitorTimer = timer
+}
+
 print("PatchMaster Daemon starting...")
+print("Setting up IPC...")
 setupIPC()
+print("Starting request monitor...")
 startRequestMonitor()
 
-// Keep daemon running
-RunLoop.main.run()
+print("Daemon running - waiting for requests...")
+fflush(stdout)
+fflush(stderr)
+
+// Keep daemon alive using dispatchMain (standard for daemons using GCD)
+dispatchMain()

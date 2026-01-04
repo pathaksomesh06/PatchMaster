@@ -12,6 +12,7 @@ import Foundation
 class UpdateViewModel: ObservableObject {
     @Published var updates: [MockAppUpdate] = []
     @Published var isChecking = false
+    @Published var checkingStatus = "Checking for updates..."
     @Published var lastChecked = Date()
     
     func checkForUpdates() async {
@@ -22,15 +23,18 @@ class UpdateViewModel: ObservableObject {
         }
         
         do {
-            updates = try await DaemonCommunicator.shared.checkForUpdates()
+            checkingStatus = "Scanning installed apps..."
+            updates = try await DaemonCommunicator.shared.checkForUpdates() { status in
+                self.checkingStatus = status
+            }
         } catch {
             print("Error checking updates: \(error)")
         }
     }
     
     func refreshAfterInstall() async {
-        // Wait for installation to complete and system to register
-        try? await Task.sleep(nanoseconds: 12_000_000_000) // 12 seconds
+        // Wait longer for system to fully register the new app
+        try? await Task.sleep(nanoseconds: 15_000_000_000) // 15 seconds
         
         print("🔄 Refreshing app list after installation...")
         

@@ -42,16 +42,6 @@
 		FB7DE87D2E153EAD00B20E16 /* PatchMasterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatchMasterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		FB37F3992E15C5C20052EFD6 /* Exceptions for "PatchMaster" folder in "PatchMaster" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				DebugCatalog.swift,
-			);
-			target = FB7DE8642E153EAB00B20E16 /* PatchMaster */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FB37F3832E15C3360052EFD6 /* PatchMasterDaemon */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -60,9 +50,6 @@
 		};
 		FB7DE8672E153EAB00B20E16 /* PatchMaster */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				FB37F3992E15C5C20052EFD6 /* Exceptions for "PatchMaster" folder in "PatchMaster" target */,
-			);
 			path = PatchMaster;
 			sourceTree = "<group>";
 		};

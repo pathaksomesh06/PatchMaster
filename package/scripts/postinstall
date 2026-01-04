@@ -1,0 +1,95 @@
+#!/bin/bash
+echo "🚀 PatchMaster Installation Starting..."
+
+# Log the installation process for debugging
+echo "$(date): PatchMaster installation started" >> /var/log/patchmaster-install.log
+
+# Create directories
+mkdir -p "/Library/PrivilegedHelperTools"
+
+# Copy daemon files from app bundle - FIXED PATH for Intune deployment
+APP_PATH="/Applications/PatchMaster.app"
+echo "🔍 Looking for app at: $APP_PATH"
+
+# Check if app exists
+if [ ! -d "$APP_PATH" ]; then
+    echo "❌ ERROR: PatchMaster.app not found at $APP_PATH" >> /var/log/patchmaster-install.log
+    echo "❌ ERROR: PatchMaster.app not found at $APP_PATH"
+    exit 1
+fi
+
+echo "✅ Found PatchMaster.app at $APP_PATH"
+
+# Copy daemon files from app bundle
+echo "📋 Copying daemon files..."
+cp "$APP_PATH/Contents/Resources/Daemon/PatchMasterDaemon" "/Library/PrivilegedHelperTools/"
+cp "$APP_PATH/Contents/Resources/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist" "/Library/LaunchDaemons/"
+
+# Verify files were copied
+if [ ! -f "/Library/PrivilegedHelperTools/PatchMasterDaemon" ]; then
+    echo "❌ ERROR: Failed to copy PatchMasterDaemon" >> /var/log/patchmaster-install.log
+    echo "❌ ERROR: Failed to copy PatchMasterDaemon"
+    exit 1
+fi
+
+if [ ! -f "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist" ]; then
+    echo "❌ ERROR: Failed to copy daemon plist" >> /var/log/patchmaster-install.log
+    echo "❌ ERROR: Failed to copy daemon plist"
+    exit 1
+fi
+
+# Set permissions for daemon files
+chmod 755 "/Library/PrivilegedHelperTools/PatchMasterDaemon"
+chown root:wheel "/Library/PrivilegedHelperTools/PatchMasterDaemon"
+chmod 644 "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist"
+chown root:wheel "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist"
+
+# Create log file
+touch /var/log/patchmaster.log
+chmod 644 /var/log/patchmaster.log
+
+# Setup IPC directories with proper permissions (CRITICAL FIX)
+echo "🔧 Setting up IPC communication..."
+rm -rf /tmp/patchmaster-ipc
+mkdir -p /tmp/patchmaster-ipc/requests
+mkdir -p /tmp/patchmaster-ipc/responses
+mkdir -p /tmp/patchmaster-ipc/progress
+
+# Set proper permissions for IPC (777 = read/write for both daemon and app)
+chmod -R 777 /tmp/patchmaster-ipc
+echo "✅ IPC directories created with proper permissions"
+
+# Load and start daemon
+echo "🚀 Loading daemon..."
+launchctl load "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist"
+
+# Wait for daemon to start
+sleep 3
+
+# Verify daemon is running
+if launchctl list | grep -q "com.mavericklabs.patchmaster.daemon"; then
+    echo "✅ PatchMaster daemon started successfully"
+    echo "$(date): Daemon started successfully" >> /var/log/patchmaster-install.log
+else
+    echo "⚠️ Daemon may not have started - will retry"
+    launchctl unload "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist" 2>/dev/null || true
+    sleep 2
+    launchctl load "/Library/LaunchDaemons/com.mavericklabs.patchmaster.daemon.plist"
+    
+    # Final check
+    if launchctl list | grep -q "com.mavericklabs.patchmaster.daemon"; then
+        echo "✅ PatchMaster daemon started successfully on retry"
+        echo "$(date): Daemon started successfully on retry" >> /var/log/patchmaster-install.log
+    else
+        echo "❌ ERROR: Failed to start daemon after retry" >> /var/log/patchmaster-install.log
+        echo "❌ ERROR: Failed to start daemon after retry"
+    fi
+fi
+
+# Remove quarantine attributes if they exist
+xattr -d com.apple.quarantine "$APP_PATH" 2>/dev/null || true
+
+echo "🎉 PatchMaster installation completed successfully!"
+echo "$(date): Installation completed successfully" >> /var/log/patchmaster-install.log
+echo "📱 The app is ready to use and will automatically detect updates"
+exit 0

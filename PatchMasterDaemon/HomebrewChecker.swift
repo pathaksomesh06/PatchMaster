@@ -64,14 +64,16 @@ class HomebrewChecker {
                 print("📝 Manual mapping for \(app.bundleId): \(manualName)")
                 // Use the installed version as current, and Homebrew version if available for update
                 let cask = bundleIdMappings[app.bundleId]
-                let newVersion = cask?.version ?? app.version
+                let rawVersion = cask?.version ?? app.version
+                let newVersion = VersionCompare.cleanVersionForDisplay(rawVersion)
                 let updateAvailable = VersionCompare.isNewer(newVersion, than: app.version)
                 print("   📦 Bundle ID: \(app.bundleId)")
                 print("   📊 Installed: \(app.version) | Homebrew: \(newVersion)")
+                print("   🔍 Update check: isNewer('\(newVersion)', than: '\(app.version)') = \(updateAvailable)")
                 if updateAvailable {
                     print("   ✅ UPDATE AVAILABLE!")
                     let update = AppUpdate(
-                        app: nil,
+                        appInfo: nil,
                         homebrewCask: cask,
                         currentVersion: app.version,
                         newVersion: newVersion,
@@ -123,6 +125,7 @@ class HomebrewChecker {
                 print("🍺 Found: \(appName) → \(shownName) (via \(matchType))")
                 print("   📦 Bundle ID: \(app.bundleId)")
                 print("   📊 Installed: \(app.version) | Homebrew: \(cask.version)")
+                print("   🔍 Update check: isNewer('\(cask.version)', than: '\(app.version)')")
                 
                 if VersionCompare.isNewer(cask.version, than: app.version) {
                     updateCount += 1
